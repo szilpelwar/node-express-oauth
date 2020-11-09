@@ -77,31 +77,25 @@ if(typeof req.query.scope !== "string" ||
 })
 
 
-app.post("/approve", (req,res) =>{
-	const {userName,password,requestId} = req.body
-
-	if (!userName || users[userName] != password){
-		res.status(401).send(" Error : User not Authorized")
-	return
+app.post("/approve", (req, res) => {
+	const { userName, password, requestId } = req.body
+	if (!userName || users[userName] !== password) {
+		res.status(401).send("Error: user not authorized")
+		return
 	}
-
 	const clientReq = requests[requestId]
 	delete requests[requestId]
-
-	if(!clientReq){
-		res.status(401).send(" Error : Invalid User Request")
-	return;
+	if (!clientReq) {
+		res.status(401).send("Error: invalid user request")
+		return
 	}
 	const code = randomString()
-
-	authorizationCodes[code] = {clientReq,userName}
-
+	authorizationCodes[code] = { clientReq, userName }
 	const redirectUri = url.parse(clientReq.redirect_uri)
 	redirectUri.query = {
 		code,
 		state: clientReq.state,
 	}
-
 	res.redirect(url.format(redirectUri))
 })
 
