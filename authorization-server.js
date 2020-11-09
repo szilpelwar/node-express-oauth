@@ -81,18 +81,18 @@ app.post("/approve", (req,res) =>{
 	const {userName,password,requestId} = req.body
 
 	if (!userName || users[userName] != password){
-		res.status(401).send(" Error : User not Authorized");
-	return;
+		res.status(401).send(" Error : User not Authorized")
+	return
 	}
 
-	const clientReq = requests[requestId];
+	const clientReq = requests[requestId]
 	delete requests[requestId]
 
 	if(!clientReq){
-		res.status(401).send(" Error : Invalid User Request");
+		res.status(401).send(" Error : Invalid User Request")
 	return;
 	}
-	const code = randomString();
+	const code = randomString()
 
 	authorizationCodes[code] = {clientReq,userName}
 
@@ -109,7 +109,7 @@ app.post("/token", (req,res)=>{
 	let authCredentials = req.headers.authorization
 
 	if(!authCredentials){
-		res.status(401).send(" Error : Not Authorized");
+		res.status(401).send(" Error : Not Authorized")
 	return;
 	}
 
@@ -117,13 +117,13 @@ app.post("/token", (req,res)=>{
 
 	const client = clients[clientId]
 	if(!client || client.clientSecret !== clientSecret){
-		res.status(401).send(" Error : Client Not Authorized");
+		res.status(401).send(" Error : Client Not Authorized")
 	return;
 	}
 
 	const code = req.body.code
 	if(!code || !authorizationCodes[code]){
-		res.status(401).send(" Error : Invalid Code");
+		res.status(401).send(" Error : Invalid Code")
 	return;
 	}
 
